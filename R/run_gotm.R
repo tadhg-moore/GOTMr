@@ -14,14 +14,6 @@
 #'@examples
 #'sim_folder <- system.file('extdata', package = 'GOTMr')
 #'run_gotm(sim_folder)
-#'\dontrun{
-#'out_file <- file.path(sim_folder,'output.nc')
-#'nml_file <- file.path(sim_folder,'gotm2.nml')
-#'library(gotmtools)
-#'fig_path <- tempfile("temperature", fileext = '.png')
-#'plot_temp(file = out_file, fig_path = fig_path)
-#'cat('find plot here: '); cat(fig_path)
-#' }
 #'@export
 #'@importFrom utils packageName
 run_gotm <- function (sim_folder = ".", verbose = TRUE, args = character())
