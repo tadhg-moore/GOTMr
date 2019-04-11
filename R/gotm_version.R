@@ -8,7 +8,7 @@
 #'@author
 #'Tadhg Moore
 #'@examples
-#' print(glm_version())
+#' print(gotm_version())
 #'
 #'
 #'@export

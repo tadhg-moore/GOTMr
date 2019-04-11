@@ -10,7 +10,7 @@ gotm_version()
 Returns the current version of the GOTM model being used
 }
 \examples{
-print(glm_version())
+print(gotm_version())
 
 
 }

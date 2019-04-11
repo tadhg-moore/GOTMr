@@ -11,7 +11,7 @@ The NML files can change with updated versions of GOTM. This returns a path to a
 }
 \examples{
 \dontrun{
-file.edit(nml_template_path())
+nml_template_files()
 }
 
 }

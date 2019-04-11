@@ -9,7 +9,7 @@
 #'Tadhg Moore
 #'@examples
 #'\dontrun{
-#' file.edit(nml_template_path())
+#' nml_template_files()
 #'}
 #'
 #'@export
