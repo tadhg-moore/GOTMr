@@ -2,7 +2,7 @@
 #'
 #'@description
 #'This runs the GOTM model on the specific simulation stored in \code{sim_folder}.
-#'The specified \code{sim_folder} must contain a valid NML file.
+#'The specified \code{sim_folder} must contain valid NML files.
 #'
 #'@param sim_folder the directory where simulation files are contained
 #'@param verbose should output of GOTM be shown
@@ -39,9 +39,9 @@ run_gotm <- function (sim_folder = ".", verbose = TRUE, args = character())
   #   }
   #   return(run_gotmOSx(sim_folder, verbose, args))
   # }
-  # else if (.Platform$pkgType == "source") {
-  #   return(run_gotmNIX(sim_folder, verbose, args))
-  # }
+  else if (.Platform$pkgType == "source") {
+    return(run_gotmNIX(sim_folder, verbose, args))
+  }
 }
 
 run_gotmWin <- function(sim_folder, verbose = TRUE, args){
@@ -62,6 +62,29 @@ run_gotmWin <- function(sim_folder, verbose = TRUE, args){
     } else {
       out <- system2(gotm_path, wait = TRUE, stdout = NULL,
                      stderr = NULL, args=args)
+    }
+    setwd(origin)
+    return(out)
+  }, error = function(err) {
+    print(paste("GOTM_ERROR:  ",err))
+    setwd(origin)
+  })
+}
+
+run_gotmNIX <- function(sim_folder, verbose=TRUE, args){
+  gotm_path <- system.file('exec/nixgotm', package=packageName())
+  origin <- getwd()
+  setwd(sim_folder)
+  Sys.setenv(LD_LIBRARY_PATH=system.file('extbin/nixgotm',
+                                         package=packageName()))
+
+  tryCatch({
+    if (verbose){
+      out <- system2(gotm_path, wait = TRUE, stdout = "",
+                     stderr = "", args=args)
+    } else {
+      out <- system2(gotm_path, wait = TRUE, stdout = NULL,
+                     stderr = NULL, args = args)
     }
     setwd(origin)
     return(out)
