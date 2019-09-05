@@ -30,15 +30,15 @@ run_gotm <- function (sim_folder = ".", verbose = TRUE, args = character())
   }
 
   #Code for adapting to OSX and UNIX
-  # else if (.Platform$pkgType == "mac.binary" || .Platform$pkgType ==
-  #          "mac.binary.mavericks") {
-  #   maj_v_number <- as.numeric(strsplit(Sys.info()["release"][[1]],
-  #                                       ".", fixed = T)[[1]][1])
+   else if (.Platform$pkgType == "mac.binary" || .Platform$pkgType ==
+            "mac.binary.mavericks") {
+     maj_v_number <- as.numeric(strsplit(Sys.info()["release"][[1]],
+                                         ".", fixed = T)[[1]][1])
   #   if (maj_v_number < 13) {
   #     stop("pre-mavericks mac OSX is not supported. Consider upgrading")
   #   }
-  #   return(run_gotmOSx(sim_folder, verbose, args))
-  # }
+     return(run_gotmOSx(sim_folder, verbose, args))
+  }
   else if (.Platform$pkgType == "source") {
     return(run_gotmNIX(sim_folder, verbose, args))
   }
@@ -67,6 +67,36 @@ run_gotmWin <- function(sim_folder, verbose = TRUE, args){
     return(out)
   }, error = function(err) {
     print(paste("GOTM_ERROR:  ",err))
+    setwd(origin)
+  })
+}
+
+run_gotmOSx <- function(sim_folder, verbose = TRUE, args){
+  #lib_path <- system.file('extbin/macGOTM/bin', package=packageName()) #Not sure if libraries needed for GOTM
+  
+  gotm_path <- system.file('exec/macgotm', package=packageName())
+  
+  # ship gotm and libs to sim_folder
+  #Sys.setenv(DYLD_FALLBACK_LIBRARY_PATH=lib_path) #Libraries?
+  
+  origin <- getwd()
+  setwd(sim_folder)
+
+  tryCatch({
+    if (verbose){
+      out <- system2(gotm_path, wait = TRUE, stdout = "", 
+                     stderr = "", args = args)
+      
+    } else {
+      out <- system2(gotm_path, wait = TRUE, stdout = NULL, 
+                     stderr = NULL, args=args)
+    }
+    
+    setwd(origin)
+	return(out)
+  }, error = function(err) {
+    print(paste("GOTM_ERROR:  ",err))
+    
     setwd(origin)
   })
 }
