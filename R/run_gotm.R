@@ -79,13 +79,19 @@ run_gotmWin <- function(sim_folder, yaml = TRUE, yaml_file = 'gotm.yaml', verbos
   })
 }
 
-run_gotmOSx <- function(sim_folder, verbose = TRUE, args){
+run_gotmOSx <- function(sim_folder, yaml = TRUE, yaml_file = 'gotm.yaml', verbose = TRUE, args){
   #lib_path <- system.file('extbin/macGOTM/bin', package=packageName()) #Not sure if libraries needed for GOTM
 
   gotm_path <- system.file('exec/macgotm', package=packageName())
 
   # ship gotm and libs to sim_folder
   #Sys.setenv(DYLD_FALLBACK_LIBRARY_PATH=lib_path) #Libraries?
+
+  if(yaml){
+    args <- c(args, yaml_file)
+  }else{
+    args <- c(args,'--read_nml')
+  }
 
   origin <- getwd()
   setwd(sim_folder)
@@ -109,8 +115,15 @@ run_gotmOSx <- function(sim_folder, verbose = TRUE, args){
   })
 }
 
-run_gotmNIX <- function(sim_folder, verbose=TRUE, args){
+run_gotmNIX <- function(sim_folder, yaml = TRUE, yaml_file = 'gotm.yaml', verbose=TRUE, args){
   gotm_path <- system.file('exec/nixgotm', package=packageName())
+
+  if(yaml){
+    args <- c(args, yaml_file)
+  }else{
+    args <- c(args,'--read_nml')
+  }
+
   origin <- getwd()
   setwd(sim_folder)
   Sys.setenv(LD_LIBRARY_PATH=system.file('extbin/nixgotm',

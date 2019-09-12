@@ -4,10 +4,15 @@
 \alias{run_gotm}
 \title{Run the GOTM model}
 \usage{
-run_gotm(sim_folder = ".", verbose = TRUE, args = character())
+run_gotm(sim_folder = ".", yaml = TRUE, yaml_file = "gotm.yaml",
+  verbose = TRUE, args = character())
 }
 \arguments{
 \item{sim_folder}{the directory where simulation files are contained}
+
+\item{yaml}{logical; If true will use 'gotm.yaml' file for set up otherwise it will use namelist files. Defaults to TRUE}
+
+\item{yaml_file}{filepath; to file with GOTM setup. Defaults to 'gotm.yaml'}
 
 \item{verbose}{should output of GOTM be shown}
 
@@ -22,6 +27,6 @@ sim_folder <- system.file('extdata', package = 'GOTMr')
 run_gotm(sim_folder)
 }
 \author{
-Jordan Read, Luke Winslow
+Tadhg Moore
 }
 \keyword{methods}
