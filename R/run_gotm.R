@@ -23,7 +23,7 @@ run_gotm <- function (sim_folder = ".", yaml = TRUE, yaml_file = 'gotm.yaml', ve
   if (sum(file.exists(c(file.path(sim_folder, "airsea.nml"),
                      file.path(sim_folder, "gotmrun.nml"),
                      file.path(sim_folder, "gotmmean.nml"),
-                     file.path(sim_folder, "gotmturb.nml")))) != 4) {
+                     file.path(sim_folder, "gotmturb.nml")))) != 4 & !yaml) {
     stop("You must have a valid GOTM setup in your sim_folder: ",
          sim_folder)
   }
@@ -65,7 +65,7 @@ run_gotmWin <- function(sim_folder, yaml = TRUE, yaml_file = 'gotm.yaml', verbos
 
   tryCatch({
     if (verbose){
-      out <- system2(gotm_path, wait = TRUE, stdout = "",
+      out <- system2(gotm_path, wait = TRUE, stdout = TRUE,
                      stderr = "", args=args)
     } else {
       out <- system2(gotm_path, wait = TRUE, stdout = NULL,
