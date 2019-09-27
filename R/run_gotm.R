@@ -7,7 +7,7 @@
 #'@param sim_folder the directory where simulation files are contained
 #'@param yaml logical; If true will use 'gotm.yaml' file for set up otherwise it will use namelist files. Defaults to TRUE
 #'@param yaml_file filepath; to file with GOTM setup. Defaults to 'gotm.yaml'
-#'@param verbose should output of GOTM be shown
+#'@param verbose Save output as character vector. Defaults to FALSE
 #'@param args Optional arguments to pass to GOTM executable
 #'
 #'@keywords methods
@@ -68,8 +68,7 @@ run_gotmWin <- function(sim_folder, yaml = TRUE, yaml_file = 'gotm.yaml', verbos
       out <- system2(gotm_path, wait = TRUE, stdout = TRUE,
                      stderr = "", args=args)
     } else {
-      out <- system2(gotm_path, wait = TRUE, stdout = NULL,
-                     stderr = NULL, args=args)
+      out <- system2(gotm_path, args=args)
     }
     setwd(origin)
     return(out)

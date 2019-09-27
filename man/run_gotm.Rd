@@ -14,7 +14,7 @@ run_gotm(sim_folder = ".", yaml = TRUE, yaml_file = "gotm.yaml",
 
 \item{yaml_file}{filepath; to file with GOTM setup. Defaults to 'gotm.yaml'}
 
-\item{verbose}{should output of GOTM be shown}
+\item{verbose}{Save output as character vector. Defaults to FALSE}
 
 \item{args}{Optional arguments to pass to GOTM executable}
 }
