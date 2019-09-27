@@ -18,7 +18,7 @@
 #'run_gotm(sim_folder)
 #'@export
 #'@importFrom utils packageName
-run_gotm <- function (sim_folder = ".", yaml = TRUE, yaml_file = 'gotm.yaml', verbose = TRUE, args = character())
+run_gotm <- function (sim_folder = ".", yaml = TRUE, yaml_file = 'gotm.yaml', verbose = FALSE, args = character())
 {
   if (sum(file.exists(c(file.path(sim_folder, "airsea.nml"),
                      file.path(sim_folder, "gotmrun.nml"),
