@@ -31,17 +31,20 @@ run_gotm <- function (sim_folder = ".", yaml = TRUE, yaml_file = 'gotm.yaml', ve
     return(run_gotmWin(sim_folder, yaml = yaml, yaml_file = yaml_file, verbose, args))
   }
 
-  #Code for adapting to OSX and UNIX
-   else if (.Platform$pkgType == "mac.binary" || .Platform$pkgType ==
-            "mac.binary.mavericks") {
-     maj_v_number <- as.numeric(strsplit(Sys.info()["release"][[1]],
-                                         ".", fixed = T)[[1]][1])
-  #   if (maj_v_number < 13) {
-  #     stop("pre-mavericks mac OSX is not supported. Consider upgrading")
-  #   }
-     return(run_gotmOSx(sim_folder, verbose, args))
+  ### macOS ###
+  if (grepl('mac.binary',.Platform$pkgType)) {
+    maj_v_number <- as.numeric(strsplit(
+      Sys.info()["release"][[1]],'.', fixed = TRUE)[[1]][1])
+
+    if (maj_v_number < 13.0) {
+      stop('pre-mavericks mac OSX is not supported. Consider upgrading')
+    }
+
+    return(run_gotmOSx(sim_folder, verbose, system.args))
+
   }
-  else if (.Platform$pkgType == "source") {
+
+  if (.Platform$pkgType == "source") {
     return(run_gotmNIX(sim_folder, verbose, args))
   }
 }
@@ -78,41 +81,41 @@ run_gotmWin <- function(sim_folder, yaml = TRUE, yaml_file = 'gotm.yaml', verbos
   })
 }
 
-run_gotmOSx <- function(sim_folder, yaml = TRUE, yaml_file = 'gotm.yaml', verbose = TRUE, args){
-  #lib_path <- system.file('extbin/macGOTM/bin', package=packageName()) #Not sure if libraries needed for GOTM
-
-  gotm_path <- system.file('exec/macgotm', package=packageName())
-
-  # ship gotm and libs to sim_folder
-  #Sys.setenv(DYLD_FALLBACK_LIBRARY_PATH=lib_path) #Libraries?
-
-  if(yaml){
-    args <- c(args, yaml_file)
-  }else{
-    args <- c(args,'--read_nml')
-  }
-
-  origin <- getwd()
-  setwd(sim_folder)
-
-  tryCatch({
-    if (verbose){
-      out <- system2(gotm_path, wait = TRUE, stdout = "",
-                     stderr = "", args = args)
-
-    } else {
-      out <- system2(gotm_path, wait = TRUE, stdout = NULL,
-                     stderr = NULL, args=args)
-    }
-
-    setwd(origin)
-	return(out)
-  }, error = function(err) {
-    print(paste("GOTM_ERROR:  ",err))
-
-    setwd(origin)
-  })
-}
+# run_gotmOSx <- function(sim_folder, yaml = TRUE, yaml_file = 'gotm.yaml', verbose = TRUE, args){
+#   #lib_path <- system.file('extbin/macGOTM/bin', package=packageName()) #Not sure if libraries needed for GOTM
+#
+#   gotm_path <- system.file('exec/macgotm', package=packageName())
+#
+#   # ship gotm and libs to sim_folder
+#   #Sys.setenv(DYLD_FALLBACK_LIBRARY_PATH=lib_path) #Libraries?
+#
+#   if(yaml){
+#     args <- c(args, yaml_file)
+#   }else{
+#     args <- c(args,'--read_nml')
+#   }
+#
+#   origin <- getwd()
+#   setwd(sim_folder)
+#
+#   tryCatch({
+#     if (verbose){
+#       out <- system2(gotm_path, wait = TRUE, stdout = "",
+#                      stderr = "", args = args)
+#
+#     } else {
+#       out <- system2(gotm_path, wait = TRUE, stdout = NULL,
+#                      stderr = NULL, args=args)
+#     }
+#
+#     setwd(origin)
+# 	return(out)
+#   }, error = function(err) {
+#     print(paste("GOTM_ERROR:  ",err))
+#
+#     setwd(origin)
+#   })
+# }
 
 run_gotmNIX <- function(sim_folder, yaml = TRUE, yaml_file = 'gotm.yaml', verbose=TRUE, args){
   gotm_path <- system.file('exec/nixgotm', package=packageName())
@@ -142,4 +145,31 @@ run_gotmNIX <- function(sim_folder, yaml = TRUE, yaml_file = 'gotm.yaml', verbos
     print(paste("GOTM_ERROR:  ",err))
     setwd(origin)
   })
+}
+
+### From GLEON/gotm3r
+gotm.systemcall <- function(sim_folder, gotm_path, verbose, system.args) {
+  origin <- getwd()
+  setwd(sim_folder)
+
+  tryCatch({
+    if (verbose){
+      out <- system2(gotm_path, wait = TRUE, stdout = "",
+                     stderr = "", args = system.args)
+    } else {
+      out <- system2(gotm_path, wait = TRUE, stdout = NULL,
+                     stderr = NULL, args = system.args)
+    }
+    setwd(origin)
+    return(out)
+  }, error = function(err) {
+    print(paste("gotm_ERROR:  ",err))
+    setwd(origin)
+  })
+}
+
+### macOS ###
+run_gotmOSx <- function(sim_folder, verbose, system.args){
+  gotm_path <- system.file('exec/macgotm', package = 'GOTMr')
+  gotm.systemcall(sim_folder = sim_folder, gotm_path = gotm_path, verbose = verbose, system.args = system.args)
 }
